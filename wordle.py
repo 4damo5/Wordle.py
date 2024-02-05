@@ -19,27 +19,20 @@ colorama.init(autoreset = True)
 #if an invalid character is entered dont count it as an attempt
 
 #Things to fix:
-#duplicate yellow characters
-#the win condition is not reading because the colors change how the string is read
-#lose condition not going
-
+#duplicate yellow characters for words with double letters
 
 #reading word txt and storing as list
 words_file = open('valid-wordle-words.txt', 'r')
 word_list = words_file.read().split()
 
-#reading letter txt and storing as list 
-letter_file = open('valid-chars.txt', 'r')
-letter_list = letter_file.read().split()
-
 #randomize which word is chosen from the word list
-word =  list(word_list[r.randint(0,14854)].upper())
+word =  list(word_list[r.randint(0, 14854)].upper())
 
-loop = 0
+letter_num = 0
 
 for letter in word:
-    word[loop] = '\x1b[32m'+letter
-    loop += 1
+    word[letter_num] = '\x1b[32m' + letter
+    letter_num += 1
 
 player_status = False #did they win or not
 
@@ -55,6 +48,7 @@ current_guess = []
 
 guess_num = 1
 
+#display 6x5 grid of empty letter blocks and ask for input
 def game_intro(g1, g2, g3, g4, g5, g6):
     guesses = [' '.join(g1), ' '.join(g2), ' '.join(g3), ' '.join(g4), ' '.join(g5), ' '.join(g6)]
 
@@ -66,21 +60,21 @@ def game_intro(g1, g2, g3, g4, g5, g6):
             player_status = True
             break
     guesses.clear()
-    #display 6x5 grid of empty letter blocks and ask for input
-
+    
+#changes color of letters in terminal
 def letter_color(guess):
     i = 0
     for letter in current_guess:
-        if '\x1b[32m'+letter == word[i]:
+        if '\x1b[32m' + letter == word[i]:
             guess.append(Fore.GREEN + letter)
-        elif '\x1b[32m'+letter in word:
+        elif '\x1b[32m' + letter in word:
             guess.append(Fore.YELLOW + letter)
         else:
             guess.append(Fore.WHITE + letter)
         i += 1
         
 
-game_intro(guess1,guess2,guess3,guess4,guess5,guess6)
+game_intro(guess1, guess2, guess3, guess4, guess5, guess6)
 
 while player_status != True:
     match guess_num:
@@ -137,5 +131,5 @@ while player_status != True:
             print(f'The word was {' '.join(word)}')
             break
     
-    game_intro(guess1,guess2,guess3,guess4,guess5,guess6)
+    game_intro(guess1, guess2, guess3, guess4, guess5, guess6)
     guess_num += 1
